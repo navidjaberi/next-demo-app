@@ -1,0 +1,141 @@
+.header {
+  background-color: rgb(57, 9, 102);
+  width: 100%;
+  height: 17vh;
+  margin: 0;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  color: white;
+}
+
+.header h1 {
+  font-size: 30px;
+  text-transform: uppercase;
+}
+
+.header ul {
+  list-style: none;
+  padding: 5px;
+  font-size: 16px;
+  margin-top: -0.2rem;
+}
+
+.header li {
+  padding: 0.5rem;
+  display: inline;
+}
+
+.notactive:hover {
+  border-bottom: 2px solid white;
+}
+
+.active {
+  color: rgb(230, 170, 255);
+  font-weight: bold;
+  border: none;
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.header button {
+  width: auto;
+  height: 35px;
+  background-color: transparent;
+  border: 1px solid white;
+  color: white;
+  font-size: 16px;
+  border-radius: 7px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1.5rem;
+}
+
+.header button:hover {
+  background-color: rgb(230, 170, 255);
+  color: black;
+  cursor: pointer;
+}
+
+.badge {
+  font-weight: bold;
+  background-color: white;
+  border-radius: 50%;
+  color: black;
+  font-size: 18px;
+  margin-left: 10px;
+  width: 20px;
+}
+
+.title {
+  padding: 30px;
+}
+
+.control {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.dropdown {
+  display: none;
+}
+@media only screen and (max-width: 575px) {
+  .mainmenu {
+    display: none;
+  }
+  .dropdown button {
+    width: 200px !important;
+    display: block;
+    margin-top: -0.5rem;
+  }
+
+  .dropdown {
+    position: relative;
+    display: inline-block;
+    display: block;
+  }
+
+  .dropdowncontent {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 200px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+    left: 10px;
+    top: 44px;
+    border-radius: 7px;
+  }
+
+  .dropdowncontent li {
+    color: rgb(57, 9, 102);
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: center;
+  }
+
+  .dropdowncontent li:hover {
+    background-color: rgb(57, 9, 102);
+    color: white;
+  }
+
+  .dropdown:hover .dropdowncontent {
+    display: block;
+  }
+  .header button {
+    width: auto;
+    height: 35px;
+    font-size: 13px;
+    border-radius: 7px;
+    white-space: nowrap;
+    margin: 0.5rem;
+  }
+}

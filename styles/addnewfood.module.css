@@ -1,0 +1,107 @@
+.form {
+  background-color: white;
+  width: 400px;
+  margin: 5rem auto;
+  height: auto;
+  text-align: center;
+  border-radius: 10px;
+  box-shadow: 3px 3px 35px 3px;
+  padding: 15px;
+}
+.form h1 {
+  margin-bottom: 2rem;
+  color: rgb(57, 9, 102);
+}
+
+.control {
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+.control label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.control input {
+  border-radius: 10px;
+  height: 30px;
+  width: 70%;
+}
+.valid {
+  border: 1px solid rgb(57, 9, 102);
+}
+.invalid {
+  border: 1px solid red;
+  background-color: rgb(255, 189, 189);
+}
+
+.control input:focus {
+  outline: none;
+  background-color: rgb(223, 223, 255);
+  border: 1px solid rgb(57, 9, 102);
+}
+
+.form button {
+  width: 150px;
+  height: 40px;
+  background-color: transparent;
+  border: 2px solid rgb(57, 9, 102);
+  border-radius: 5px;
+  font-size: 17px;
+  font-weight: bold;
+  margin: 1rem;
+  color: rgb(57, 9, 102);
+  cursor: pointer;
+  text-transform: uppercase;
+  text-align: center;
+}
+.form button:hover {
+  background-color: rgb(57, 9, 102);
+  color: white;
+}
+.form textarea {
+  border-radius: 10px;
+}
+.form textarea:focus {
+  outline: none;
+  background-color: rgb(223, 223, 255);
+}
+
+.form input[type="file"] {
+  display: none;
+}
+.img_label {
+  width: 50%;
+  background-color: rgb(57, 9, 102);
+  height: 40px;
+  color: white;
+  border-radius: 5px;
+  margin: 2rem auto 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.img_label:hover {
+  background-color: black;
+}
+.error {
+  color: red;
+  font-weight: bold;
+  font-size: 13px;
+  margin: 0;
+}
+.success {
+  color: green;
+  font-weight: bold;
+}
+.form button:disabled,
+.form button:disabled:hover,
+.form button:disabled:active {
+  border: none;
+  background-color: gray;
+  color: darkgray;
+  cursor: not-allowed;
+}

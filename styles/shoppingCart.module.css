@@ -1,0 +1,60 @@
+.shoppingCart {
+  display: flex;
+  justify-content: space-between;
+}
+
+.items {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  border-bottom: 1px solid gray;
+  padding: 1rem 0.7rem;
+}
+
+.action {
+  padding: 1rem;
+}
+
+.action button {
+  margin: 0.1rem;
+  width: 37px;
+
+  background-color: transparent;
+  border: 2px solid rgb(57, 9, 102);
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 17px;
+  color: rgb(57, 9, 102);
+  cursor: pointer;
+
+  text-align: center;
+}
+
+.action button:hover {
+  background-color: rgb(57, 9, 102);
+  color: white;
+}
+
+.orderAction {
+  display: flex;
+  justify-content: center;
+}
+
+.orderAction button {
+  margin: 0.5rem;
+  width: auto;
+  background-color: rgb(57, 9, 102);
+
+  border-radius: 8px;
+
+  font-size: 17px;
+  color: white;
+  cursor: pointer;
+
+  text-align: center;
+}
+
+.orderAction button:hover {
+  background-color: black;
+  color: white;
+}

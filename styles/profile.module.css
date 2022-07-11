@@ -1,0 +1,99 @@
+.profile {
+  background-color: white;
+  width: 70%;
+  margin: 5rem auto;
+  height: auto;
+  text-align: center;
+  border-radius: 10px;
+  box-shadow: 3px 3px 35px 3px;
+  padding: 10px;
+  position: relative;
+}
+
+.profile h1 {
+  margin-bottom: 2rem;
+  font-size: 40px;
+}
+
+.profile form {
+  border: 2px solid rgb(57, 9, 102);
+  width: 350px;
+  margin: 0 auto;
+  border-radius: 10px;
+}
+
+.control {
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+.control label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.control input {
+  border-radius: 10px;
+  height: 30px;
+  border: 1px solid rgb(57, 9, 102);
+}
+
+.control input:focus {
+  outline: none;
+  background-color: rgb(223, 223, 255);
+}
+
+.profile button {
+  width: auto;
+  height: 30px;
+  background-color: transparent;
+  border: 2px solid rgb(57, 9, 102);
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 16px;
+  color: rgb(57, 9, 102);
+  cursor: pointer;
+  margin: 0.5rem;
+  text-align: center;
+}
+
+.profile button:hover {
+  background-color: rgb(57, 9, 102);
+  color: white;
+}
+.favcard {
+  background-color: white;
+  width: 50%;
+  margin: 5rem auto;
+  height: auto;
+  text-align: center;
+  border-radius: 10px;
+  border: 2px dashed gray;
+  padding: 10px;
+}
+.favcard img {
+  width: 70%;
+  border-radius: 50%;
+}
+
+.favcard button {
+  width: auto;
+  height: auto;
+  background-color: transparent;
+  border: 2px solid rgb(57, 9, 102);
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 14px;
+  color: rgb(57, 9, 102);
+  cursor: pointer;
+  margin: 0.5rem;
+  text-align: center;
+}
+.fav button:hover {
+  background-color: rgb(57, 9, 102);
+  color: white;
+}
+.fav p {
+  font-weight: bold;
+}
