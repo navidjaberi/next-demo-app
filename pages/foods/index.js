@@ -6,24 +6,28 @@ import React from "react";
 import classes from "../../styles/foods.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-
 const FoodList = () => {
   const [foods, setFoods] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
-    fetchFoods();
+    if (localStorage.getItem("foods")) {
+      const foods = JSON.parse(localStorage.getItem("foods"));
+      setFoods(foods);
+    } else {
+      fetchFoods();
+    }
   }, []);
 
   async function fetchFoods() {
     setLoading(true);
     try {
       const response = await fetch(
-        "https://nextapp-8a0df-default-rtdb.firebaseio.com/food.json"
+        "https://nextapp-bf66b-default-rtdb.firebaseio.com/food.json"
       );
       if (!response.ok) {
-        setErrorMsg('No item Found...')
+        setErrorMsg("No item Found...");
         setError(true);
         setLoading(false);
       } else {
@@ -41,6 +45,7 @@ const FoodList = () => {
           });
         }
         setFoods(loadedFoods);
+        localStorage.setItem("foods", JSON.stringify(loadedFoods));
       }
     } catch (error) {
       setLoading(false);
@@ -48,7 +53,6 @@ const FoodList = () => {
       setError(true);
     }
   }
-
   return (
     <Card>
       <h1 style={{ color: "rgb(57, 9, 102)", textTransform: "uppercase" }}>
@@ -77,7 +81,6 @@ const FoodList = () => {
     </Card>
   );
 };
-
 const Foods = () => {
   return (
     <Fragment>
@@ -85,5 +88,4 @@ const Foods = () => {
     </Fragment>
   );
 };
-
 export default Foods;

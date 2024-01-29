@@ -8,7 +8,7 @@ const Detail = () => {
   const router = useRouter();
   const id = router.query.id;
 
-  fetch(`https://nextapp-8a0df-default-rtdb.firebaseio.com/food.json`)
+  fetch(`https://nextapp-bf66b-default-rtdb.firebaseio.com/food.json`)
     .then((res) => {
       return res.json();
     })

@@ -29,12 +29,12 @@ const FoodItem = (props) => {
         name: props.name,
         material: props.material,
       });
-      localStorage.setItem("fav", {
+      localStorage.setItem("fav", JSON.stringify({
         id: props.id,
         image: props.image,
         name: props.name,
         material: props.material,
-      });
+      }));
     }
   };
   const addCartHandler = () => {

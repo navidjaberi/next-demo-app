@@ -65,13 +65,11 @@ const AddNewFood = () => {
   };
   async function addNewFoodHandler(e) {
     const enteredName = nameref.current.value;
-
     e.preventDefault();
     if (enteredName.trim() === "") {
       setEntredNameValid(false);
       return;
     }
-
     const enteredMaterial = materialRef.current.value;
     if (enteredMaterial.length < 10) {
       setEntredMaterialValid(false);
@@ -107,7 +105,7 @@ const AddNewFood = () => {
     try {
       setError(false);
       const response = await fetch(
-        "https://nextapp-8a0df-default-rtdb.firebaseio.com/food.json",
+        "https://nextapp-bf66b-default-rtdb.firebaseio.com/food.json",
         {
           method: "POST",
           body: JSON.stringify({
@@ -122,7 +120,6 @@ const AddNewFood = () => {
           },
         }
       );
-
       if (!response.ok) {
         setSuccessful(false);
         setError(true);
@@ -138,8 +135,8 @@ const AddNewFood = () => {
         }, 3000);
         setError(false);
         setLoading(false);
-
         console.log(data);
+        localStorage.removeItem('foods')
       }
     } catch (err) {
       setError(true);
@@ -238,7 +235,10 @@ const AddNewFood = () => {
           {successful && (
             <p className={classes.success}>New food successfully added!</p>
           )}
+          <div style={{height:"3rem"}}>
           {loading && <p className={spiner.loader}>sending...</p>}
+          </div>
+         
         </form>
       </div>
     </Fragment>

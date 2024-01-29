@@ -7,21 +7,22 @@ import { useRouter } from "next/router";
 import Home from ".";
 import FavContex from "../store/favoriteContex";
 import FavotiteItem from "../components/favoriteItem";
-
 const Profile = () => {
-  const router = useRouter();
-
   const Authctx = useContext(AuthContex);
   const favCtx = useContext(FavContex);
-  const favorite = favCtx.favorites;
-
+  const router = useRouter();
+  useEffect(() => {
+    if (!loggedin) {
+      router.push("/");
+    }
+    },[])
   let content;
-  if (favCtx.totalFav === 0) {
+  if (favCtx.totalFav === 0 && favCtx.favorites.length <= 0) {
     content = <h5>Your Favorite List is empty...</h5>;
   } else {
     content = (
       <div className={classes.favcard}>
-        {favorite.map((food) => (
+        {favCtx.favorites.map((food) => (
           <FavotiteItem
             id={food.id}
             key={food.id}
@@ -33,7 +34,6 @@ const Profile = () => {
       </div>
     );
   }
-
   const loggedin = Authctx.isLoggedin;
   const [loading, setLoading] = useState(false);
   const [successful, setSuccessful] = useState(false);
@@ -42,11 +42,8 @@ const Profile = () => {
   const passref = useRef();
   const rePassref = useRef();
 
-  useEffect(() => {
-    if (!loggedin) {
-      router.push("/");
-    }
-  }, []);
+
+
   if (!loggedin) {
     return (
       <Link href="/">

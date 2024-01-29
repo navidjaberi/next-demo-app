@@ -61,6 +61,7 @@ const Signin = () => {
         const data = await response.json();
         if (data && data.error && data.error.message) {
           setErrormsg(data.error.message);
+          setLoading(false);
         } else {
           setErrormsg("something goes Wrong");
           setSuccessful(false);

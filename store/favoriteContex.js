@@ -7,21 +7,14 @@ const FavContex = React.createContext({
   removeFromFavorites: (mealId) => {},
   itemIsfav: (mealId) => {},
 });
-
 export function FavContexProvider(props) {
   const [isfav, setIsfav] = useState([]);
-
-
-
   const addToFavoritesHandler = (favMeal) => {
- 
     setIsfav((preFav) => {
-      
       return preFav.concat(favMeal);
     });
   };
   const removeFromFavoritesHandler = (mealId) => {
-
     setIsfav((preFav) => {
       return preFav.filter((meal) => meal.id !== mealId);
     });
