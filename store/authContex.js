@@ -1,46 +1,95 @@
 import React, { useEffect, useState } from "react";
-
-const AuthContex = React.createContext({
-  email:"",
-  token: "",
+import { supabase } from "../lib/supabase/client";
+const AuthContext = React.createContext({
+  user: null,
+  email: "",
   isLoggedin: false,
-  login: (token) => {},
-  logout: () => {},
+  login: async (email, password) => {},
+  logout: async () => {},
 });
-export const AuthContexProvider = (props) => {
-   useEffect(()=>{ const initialToken = localStorage.getItem("token")
-                    const initialEmail=localStorage.getItem("email")
-                    setEmail(initialEmail)
-   setToken(initialToken)},[])
-  
-const [email,setEmail]=useState(null)
-  const [token, setToken] = useState(null);
-  const userLoggedIn = !!token;
 
-  const loginHandler = (token,email) => {
-    setToken(token);
-    setEmail(email)
-    localStorage.setItem("token", token);
-    localStorage.setItem("email", email);
+export const AuthContextProvider = (props) => {
+  const [user, setUser] = useState(null);
+  const [email, setEmail] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const userLoggedIn = !!user;
+  useEffect(() => {
+    const getUser = async () => {
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (session?.user) {
+        setUser(session.user);
+        setEmail(session.user.email);
+      }
+
+      setLoading(false);
+    };
+
+    getUser();
+
+    // listen تغییرات auth
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session?.user) {
+        setUser(session.user);
+        setEmail(session.user.email);
+      } else {
+        setUser(null);
+        setEmail(null);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  // LOGIN
+  const loginHandler = async (email, password) => {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) throw error;
+
+    setUser(data.user);
+    setEmail(data.user.email);
   };
-  const logoutHandler = () => {
-    setToken(null);
-    setEmail(null)
-    localStorage.removeItem("token");
-    localStorage.removeItem("email")
+  const signupHandler = async (email, password) => {
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+    if (error) throw error;
+
+    setUser(data.user);
+    setEmail(data.user.email);
   };
-  const contexValue = {
-    email:email,
-    token: token,
+  const logoutHandler = async () => {
+    await supabase.auth.signOut();
+    setUser(null);
+    setEmail(null);
+  };
+
+  const contextValue = {
+    user,
+    email,
     isLoggedin: userLoggedIn,
     login: loginHandler,
+    signup: signupHandler,
     logout: logoutHandler,
+    loading,
   };
 
   return (
-    <AuthContex.Provider value={contexValue}>
+    <AuthContext.Provider value={contextValue}>
       {props.children}
-    </AuthContex.Provider>
+    </AuthContext.Provider>
   );
 };
-export default AuthContex;
+
+export default AuthContext;

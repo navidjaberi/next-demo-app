@@ -6,6 +6,7 @@ import React from "react";
 import classes from "../../styles/foods.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { supabase } from "../../lib/supabase/client";
 const FoodList = () => {
   const [foods, setFoods] = useState([]);
   const [errorMsg, setErrorMsg] = useState("");
@@ -23,34 +24,17 @@ const FoodList = () => {
   async function fetchFoods() {
     setLoading(true);
     try {
-      const response = await fetch(
-        "https://nextapp-bf66b-default-rtdb.firebaseio.com/food.json"
-      );
-      if (!response.ok) {
-        setErrorMsg("No item Found...");
-        setError(true);
-        setLoading(false);
-      } else {
-        const data = await response.json();
-        setLoading(false);
-        const loadedFoods = [];
-        for (const key in data) {
-          loadedFoods.push({
-            key: key,
-            id: key,
-            image: data[key].Image,
-            name: data[key].name,
-            material: data[key].material,
-            price: data[key].price,
-          });
-        }
-        setFoods(loadedFoods);
-        localStorage.setItem("foods", JSON.stringify(loadedFoods));
+      const { data, error } = await supabase.from("food").select("*");
+      if (error) {
+        throw error;
       }
-    } catch (error) {
-      setLoading(false);
-      setErrorMsg("Network connection error");
+      setFoods(data);
+      localStorage.setItem("foods", JSON.stringify(data));
+    } catch (err) {
       setError(true);
+      setErrorMsg(err.message || "Network connection error");
+    } finally {
+      setLoading(false);
     }
   }
   return (

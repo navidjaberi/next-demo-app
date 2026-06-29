@@ -1,48 +1,50 @@
+import { Fragment, useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { Fragment, useState } from "react";
 import Card from "../../components/card";
 import DetailItems from "../../components/detailItems";
+import { createClient } from "../lib/supabase/client";
 
 const Detail = () => {
-  const [foods, setFoods] = useState([]);
+  const [food, setFood] = useState(null);
   const router = useRouter();
-  const id = router.query.id;
+  const { id } = router.query;
+  useEffect(() => {
+    if (!id) return;
 
-  fetch(`https://nextapp-bf66b-default-rtdb.firebaseio.com/food.json`)
-    .then((res) => {
-      return res.json();
-    })
-    .then((data) => {
-      const loadedFoods = [];
-      console.log(data.id);
-      for (const key in data) {
-        if (key === id) {
-          loadedFoods.push({
-            key: key,
-            id: key,
-            image: data[key].Image,
-            name: data[key].name,
+    const fetchFood = async () => {
+      const supabase = createClient();
 
-            description: data[key].description,
-          });
-        }
-        setFoods(loadedFoods);
+      const { data, error } = await supabase
+        .from("food")
+        .select("*")
+        .eq("id", id)
+        .single();
+
+      if (error) {
+        console.error(error);
+        return;
       }
-    });
+
+      setFood(data);
+    };
+
+    fetchFood();
+  }, [id]);
+
   return (
     <Fragment>
       <Card>
-        {foods.map((food) => (
+        {food && (
           <DetailItems
-            key={food.id}
+            id={food.id}
             image={food.image}
             name={food.name}
-            id={food.id}
             description={food.description}
           />
-        ))}
+        )}
       </Card>
     </Fragment>
   );
 };
+
 export default Detail;

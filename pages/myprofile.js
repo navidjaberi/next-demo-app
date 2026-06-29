@@ -7,15 +7,18 @@ import { useRouter } from "next/router";
 import Home from ".";
 import FavContex from "../store/favoriteContex";
 import FavotiteItem from "../components/favoriteItem";
+import { createClient } from "../lib/supabase/client";
 const Profile = () => {
   const Authctx = useContext(AuthContex);
   const favCtx = useContext(FavContex);
   const router = useRouter();
+  const loggedin = Authctx.isLoggedin;
+
   useEffect(() => {
     if (!loggedin) {
       router.push("/");
     }
-    },[])
+  }, []);
   let content;
   if (favCtx.totalFav === 0 && favCtx.favorites.length <= 0) {
     content = <h5>Your Favorite List is empty...</h5>;
@@ -34,15 +37,12 @@ const Profile = () => {
       </div>
     );
   }
-  const loggedin = Authctx.isLoggedin;
   const [loading, setLoading] = useState(false);
   const [successful, setSuccessful] = useState(false);
   const [errormsg, setErrormsg] = useState("");
   const [buttonClick, setButtonClick] = useState(false);
   const passref = useRef();
   const rePassref = useRef();
-
-
 
   if (!loggedin) {
     return (
@@ -59,51 +59,42 @@ const Profile = () => {
   const changePassHandler = () => {
     setButtonClick((preState) => !preState);
   };
-  const submitHandler = (e) => {
+  const submitHandler = async (e) => {
     e.preventDefault();
-    const entredPass = passref.current.value;
-    const entredresPass = rePassref.current.value;
 
-    if (entredPass !== entredresPass) {
-      setErrormsg("passwords did not match");
+    const enteredPass = passref.current.value;
+    const enteredResPass = rePassref.current.value;
+
+    if (enteredPass !== enteredResPass) {
+      setErrormsg("Passwords do not match");
       return;
     }
 
     setLoading(true);
+    setSuccessful(false);
+
     try {
-      fetch(
-        "https://identitytoolkit.googleapis.com/v1/accounts:update?key=AIzaSyCLu0A1Edyk8jBfP7DxCWn-fzWL6xL1JzU",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            idToken: Authctx.token,
-            password: entredPass,
-            returnSecureToken: false,
-          }),
-          headers: { "Content-Type": "application/json" },
-        }
-      ).then((res) => {
-        setLoading(false);
-        if (res.ok) {
-          res.json();
-          setSuccessful(true);
-        } else {
-          res.json().then((data) => {
-            if (data && data.error && data.error.message) {
-              setErrormsg(data.error.message);
-            } else {
-              setErrormsg("something goes Wrong");
-              setSuccessful(false);
-            }
-          });
-        }
+      const supabase = createClient();
+
+      const { error } = await supabase.auth.updateUser({
+        password: enteredPass,
       });
-    } catch {
-      setErrormsg("Network connection error");
+
+      if (error) {
+        throw error;
+      }
+
+      setSuccessful(true);
+      setErrormsg("");
+
+      passref.current.value = "";
+      rePassref.current.value = "";
+    } catch (err) {
+      setErrormsg(err.message || "Something went wrong");
       setSuccessful(false);
+    } finally {
+      setLoading(false);
     }
-    entredPass = "";
-    entredresPass = "";
   };
   return (
     <section className={classes.profile}>

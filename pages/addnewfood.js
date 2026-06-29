@@ -6,6 +6,7 @@ import { faUpload } from "@fortawesome/free-solid-svg-icons";
 import AuthContex from "../store/authContex";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { createClient } from "../lib/supabase/client";
 import Home from ".";
 const AddNewFood = () => {
   const [error, setError] = useState(false);
@@ -102,44 +103,34 @@ const AddNewFood = () => {
     }
 
     setLoading(true);
+    setLoading(true);
+
     try {
       setError(false);
-      const response = await fetch(
-        "https://nextapp-bf66b-default-rtdb.firebaseio.com/food.json",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            name: enteredName,
-            material: enteredMaterial,
-            description: enteredDes,
-            price: enteredPrice,
-            Image: baseImg,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      if (!response.ok) {
+    
+      const supabase = createClient();
+    
+      const { error } = await supabase.from("food").insert({
+        name: enteredName,
+        material: enteredMaterial,
+        description: enteredDes,
+        price: Number(enteredPrice),
+        image: baseImg,
+      });
+    
+      if (error) throw error;
+    
+      setSuccessful(true);
+    
+      setTimeout(() => {
         setSuccessful(false);
-        setError(true);
-        setLoading(false);
-        setTimeout(() => {
-          setError(false);
-        }, 3000);
-      } else {
-        const data = await response.json();
-        setSuccessful(true);
-        setTimeout(() => {
-          setSuccessful(false);
-        }, 3000);
-        setError(false);
-        setLoading(false);
-        console.log(data);
-        localStorage.removeItem('foods')
-      }
+      }, 3000);
+    
+      localStorage.removeItem("foods");
     } catch (err) {
+      console.error(err);
       setError(true);
+    } finally {
       setLoading(false);
     }
     nameref.current.value = "";

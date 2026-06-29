@@ -1,86 +1,73 @@
 import { useRouter } from "next/router";
 import { Fragment, useContext, useRef, useState } from "react";
-
-import AuthContex from "../store/authContex";
+import AuthContext from "../store/authContex";
 import classes from "../styles/signin.module.css";
 import spiner from "../styles/spiner.module.css";
 const Signin = () => {
   const [login, setLogin] = useState(true);
   const [errormsg, setErrormsg] = useState("");
   const [successful, setSuccessful] = useState(false);
-
   const [loading, setLoading] = useState(false);
+
   const emailref = useRef();
   const passref = useRef();
   const rePassref = useRef();
+
   const router = useRouter();
-  const Authctx = useContext(AuthContex);
+  const authCtx = useContext(AuthContext);
+
   const changeHandler = () => {
     setErrormsg("");
     setLoading(false);
   };
+
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    const entredEmail = emailref.current.value;
-    const entredPass = passref.current.value;
+    const enteredEmail = emailref.current.value;
+    const enteredPass = passref.current.value;
 
-    let url = "";
     if (!login) {
-      url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCLu0A1Edyk8jBfP7DxCWn-fzWL6xL1JzU";
-    } else {
-      url =
-        "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCLu0A1Edyk8jBfP7DxCWn-fzWL6xL1JzU";
-    }
-    if (!login) {
-      const entredRepass = rePassref.current.value;
-      if (entredPass !== entredRepass) {
-        setErrormsg("passwords did not match");
+      const enteredRepass = rePassref.current.value;
+      if (enteredPass !== enteredRepass) {
+        setErrormsg("Passwords do not match");
         return;
       }
     }
+
     setLoading(true);
+    setErrormsg("");
 
     try {
-      const response = await fetch(url, {
-        method: "POST",
-        body: JSON.stringify({
-          email: entredEmail,
-          password: entredPass,
-          returnSecureToken: true,
-        }),
-        headers: { "Content-Type": "application/json" },
-      });
-      if (response.ok) {
-        setLoading(false);
-        const data = await response.json();
-        Authctx.login(data.idToken, data.email);
-        router.push("/myprofile");
+      if (login) {
+        // LOGIN
+        await authCtx.login(enteredEmail, enteredPass);
       } else {
-        const data = await response.json();
-        if (data && data.error && data.error.message) {
-          setErrormsg(data.error.message);
-          setLoading(false);
-        } else {
-          setErrormsg("something goes Wrong");
-          setSuccessful(false);
-        }
+        // SIGNUP
+        await authCtx.signup(enteredEmail, enteredPass);
       }
+
+      setSuccessful(true);
+      router.push("/myprofile");
     } catch (err) {
-      setErrormsg("Network connection error");
+      setErrormsg(err.message || "Authentication failed");
       setSuccessful(false);
+    } finally {
       setLoading(false);
     }
   };
-  const singChangeHandler = () => {
-    setLogin((preState) => !preState);
+
+  const toggleModeHandler = () => {
+    setLogin((prev) => !prev);
+    setErrormsg("");
+    setSuccessful(false);
   };
 
   return (
     <Fragment>
       <div className={classes.form}>
         <h1>{login ? "Sign in" : "Sign Up"}</h1>
+
         <form onSubmit={submitHandler}>
           <div className={classes.control}>
             <label htmlFor="email">Enter your Email</label>
@@ -89,30 +76,21 @@ const Signin = () => {
               id="email"
               ref={emailref}
               onChange={changeHandler}
-            ></input>
+            />
           </div>
-          {login && (
-            <div className={classes.control}>
-              <label htmlFor="password"> Enter your Password</label>
-              <input
-                type="password"
-                id="password"
-                ref={passref}
-                onChange={changeHandler}
-              ></input>
-            </div>
-          )}{" "}
-          {!login && (
-            <div className={classes.control}>
-              <label htmlFor="password"> Enter a Password</label>
-              <input
-                type="password"
-                id="password"
-                ref={passref}
-                onChange={changeHandler}
-              ></input>
-            </div>
-          )}
+
+          <div className={classes.control}>
+            <label htmlFor="password">
+              {login ? "Enter your Password" : "Create Password"}
+            </label>
+            <input
+              type="password"
+              id="password"
+              ref={passref}
+              onChange={changeHandler}
+            />
+          </div>
+
           {!login && (
             <div className={classes.control}>
               <label htmlFor="repassword">Repeat Password</label>
@@ -121,19 +99,25 @@ const Signin = () => {
                 id="repassword"
                 ref={rePassref}
                 onChange={changeHandler}
-              ></input>
+              />
             </div>
           )}
-          <button onClick={submitHandler}>
-            {login ? "Sign in" : "Sign Up"}
-          </button>
-          {!successful && (
+
+          <button type="submit">{login ? "Sign in" : "Sign Up"}</button>
+
+          {loading && <p className={spiner.loader}>sending...</p>}
+
+          {errormsg && (
             <p style={{ color: "red", fontWeight: "bold" }}>{errormsg}</p>
           )}
-          {loading && <p className={spiner.loader}>sending...</p>}
+
+          {successful && (
+            <p style={{ color: "green", fontWeight: "bold" }}>Success!</p>
+          )}
+
           <p>
-            <a onClick={singChangeHandler}>
-              {!login ? "Already have an Account?" : "Create a New Account"}
+            <a onClick={toggleModeHandler}>
+              {login ? "Create a new account" : "Already have an account?"}
             </a>
           </p>
         </form>
@@ -141,4 +125,5 @@ const Signin = () => {
     </Fragment>
   );
 };
+
 export default Signin;
