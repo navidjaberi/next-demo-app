@@ -9,8 +9,15 @@ export function CartProvider({ children }) {
   const [cart, dispatch] = useReducer(cartReducer, initialCart);
 
   useEffect(() => {
-    const savedCart = localStorage.getItem("cart");
-    dispatch({ type: "load", items: savedCart ? JSON.parse(savedCart) : [] });
+    let savedItems = [];
+
+    try {
+      savedItems = JSON.parse(localStorage.getItem("cart")) || [];
+    } catch {
+      savedItems = [];
+    }
+
+    dispatch({ type: "load", items: savedItems });
   }, []);
 
   useEffect(() => {

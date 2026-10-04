@@ -3,13 +3,22 @@
 import { Moon, Sun } from "lucide-react";
 import styles from "./ThemeToggle.module.css";
 
+function getCurrentTheme() {
+  const theme = document.documentElement.dataset.theme;
+
+  if (theme) {
+    return theme;
+  }
+
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
 export default function ThemeToggle() {
   function toggleTheme() {
-    const currentTheme = document.documentElement.dataset.theme;
-    const newTheme = currentTheme === "dark" ? "light" : "dark";
+    const newTheme = getCurrentTheme() === "dark" ? "light" : "dark";
 
     document.documentElement.dataset.theme = newTheme;
-    localStorage.setItem("theme", newTheme);
+    document.cookie = `theme=${newTheme}; path=/; max-age=31536000`;
   }
 
   return (

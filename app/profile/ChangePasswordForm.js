@@ -10,12 +10,25 @@ export default function ChangePasswordForm() {
   return (
     <form action={formAction} className={`card form ${styles.passwordForm}`}>
       <div className="field">
+        <label htmlFor="currentPassword">Current password</label>
+        <input
+          className="input"
+          type="password"
+          id="currentPassword"
+          name="currentPassword"
+          autoComplete="current-password"
+          required
+        />
+      </div>
+
+      <div className="field">
         <label htmlFor="password">New password</label>
         <input
           className="input"
           type="password"
           id="password"
           name="password"
+          autoComplete="new-password"
           minLength={6}
           required
         />
@@ -28,6 +41,7 @@ export default function ChangePasswordForm() {
           type="password"
           id="confirmPassword"
           name="confirmPassword"
+          autoComplete="new-password"
           minLength={6}
           required
         />

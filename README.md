@@ -23,8 +23,10 @@ The app has two roles:
 - Favorites saved per user
 - Profile page with avatar upload, display name, order status, favorites and password change
 - Confirm modals for signing out and deleting
+- One click "Owner login" button so visitors can try the admin dashboard
+- Changing the password needs the current password
 - Protected pages (`/admin`, `/profile`) using Next.js proxy
-- Dark mode (follows the system setting, can be toggled)
+- Dark mode (follows the system setting, can be toggled and is saved in a cookie)
 - Responsive layout with a mobile menu
 - Row Level Security on all tables
 
@@ -80,6 +82,15 @@ where id = (select id from auth.users where email = 'you@example.com');
 
 Every new account is a customer by default.
 
+5. (Optional) For the **Owner login** button, create one more account to use as the demo owner, make it an admin with the query above, and add its email and password to `.env.local`:
+
+```
+DEMO_ADMIN_EMAIL=owner@example.com
+DEMO_ADMIN_PASSWORD=owner-password
+```
+
+The button only shows when `DEMO_ADMIN_EMAIL` is set. The demo owner can't change its password, but visitors can still edit the menu and order statuses, so check them now and then.
+
 ### 2. Set up the project
 
 ```bash
@@ -114,7 +125,7 @@ Open [http://localhost:3000](http://localhost:3000).
 
 ## Deploy
 
-The easiest way is [Vercel](https://vercel.com/new). Import the repository and add the two environment variables from `.env.local`.
+The easiest way is [Vercel](https://vercel.com/new). Import the repository and add the environment variables from `.env.local`.
 
 ## Notes
 

@@ -4,8 +4,8 @@ import { useActionState, useState } from "react";
 import { login, signup } from "./actions";
 import styles from "./login.module.css";
 
-export default function AuthForm({ next }) {
-  const [isLogin, setIsLogin] = useState(true);
+export default function AuthForm({ next, startWithSignup }) {
+  const [isLogin, setIsLogin] = useState(!startWithSignup);
   const [loginState, loginAction, loginPending] = useActionState(login, {});
   const [signupState, signupAction, signupPending] = useActionState(signup, {});
 

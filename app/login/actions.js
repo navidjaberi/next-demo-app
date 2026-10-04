@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
 function getSafeRedirect(next) {
-  if (next && next.startsWith("/") && !next.startsWith("//")) {
+  if (next && next.startsWith("/") && !next.startsWith("//") && !next.includes("\\")) {
     return next;
   }
   return "/foods";
@@ -60,6 +60,25 @@ export async function signup(prevState, formData) {
 
   revalidatePath("/", "layout");
   redirect(getSafeRedirect(formData.get("next")));
+}
+
+export async function loginAsOwner() {
+  const email = process.env.DEMO_ADMIN_EMAIL;
+  const password = process.env.DEMO_ADMIN_PASSWORD;
+
+  if (!email || !password) {
+    return { error: "Owner login is not set up yet." };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+  if (error) {
+    return { error: "Owner login failed. Please try again later." };
+  }
+
+  revalidatePath("/", "layout");
+  redirect("/admin");
 }
 
 export async function logout() {

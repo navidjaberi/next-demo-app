@@ -5,7 +5,7 @@ export const metadata = {
 };
 
 export default async function LoginPage({ searchParams }) {
-  const { next = "" } = await searchParams;
+  const { next = "", mode = "" } = await searchParams;
 
-  return <AuthForm next={next} />;
+  return <AuthForm next={next} startWithSignup={mode === "signup"} />;
 }
