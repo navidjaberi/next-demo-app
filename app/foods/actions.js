@@ -42,7 +42,7 @@ export async function addFood(prevState, formData) {
   }
 
   if (Object.keys(errors).length > 0) {
-    return { errors, values };
+    return { errors };
   }
 
   const supabase = await createClient();
@@ -61,7 +61,7 @@ export async function addFood(prevState, formData) {
     .upload(filePath, image, { contentType: image.type });
 
   if (uploadError) {
-    return { error: "Uploading the image failed. Please try again.", values };
+    return { error: "Uploading the image failed. Please try again." };
   }
 
   const { data: imageData } = supabase.storage
@@ -83,7 +83,7 @@ export async function addFood(prevState, formData) {
     .single();
 
   if (error) {
-    return { error: "Saving the food failed. Please try again.", values };
+    return { error: "Saving the food failed. Please try again." };
   }
 
   revalidatePath("/");
