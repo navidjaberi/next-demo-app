@@ -1,8 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { demoOwner } from "@/lib/demo";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getUser } from "@/lib/supabase/server";
 
 export async function changePassword(prevState, formData) {
   const currentPassword = formData.get("currentPassword");
@@ -25,19 +24,19 @@ export async function changePassword(prevState, formData) {
     return { error: "New password must be different from the current one." };
   }
 
-  const supabase = await createClient();
-  const { data } = await supabase.auth.getUser();
+  const user = await getUser();
 
-  if (!data.user) {
+  if (!user) {
     return { error: "Please sign in again." };
   }
 
-  if (data.user.email === demoOwner.email) {
-    return { error: "The demo owner password can't be changed." };
+  if (user.isAdmin) {
+    return { error: "The owner password can not be changed here." };
   }
 
+  const supabase = await createClient();
   const { error: signInError } = await supabase.auth.signInWithPassword({
-    email: data.user.email,
+    email: user.email,
     password: currentPassword,
   });
 
