@@ -1,0 +1,46 @@
+.form {
+  max-width: 720px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 1rem;
+}
+
+.upload {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  height: 220px;
+  border: 2px dashed var(--border);
+  border-radius: var(--radius);
+  color: var(--text-muted);
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.upload:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.preview {
+  object-fit: cover;
+}
+
+.fileInput {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+@media (max-width: 700px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
+}
