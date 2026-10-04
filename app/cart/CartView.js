@@ -19,7 +19,11 @@ export default function CartView({ isLoggedIn }) {
     setError("");
 
     startTransition(async () => {
-      const cartItems = items.map((item) => ({ id: item.id, quantity: item.quantity }));
+      const cartItems = items.map((item) => ({
+        id: item.id,
+        name: item.name,
+        quantity: item.quantity,
+      }));
       const result = await placeOrder(cartItems);
 
       if (result.error) {

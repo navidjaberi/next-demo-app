@@ -30,13 +30,21 @@ export async function placeOrder(cartItems) {
     return { error: "Something went wrong. Please try again." };
   }
 
+  const missingFood = cartItems.find((cartItem) => !foods.some((f) => f.id === cartItem.id));
+
+  if (missingFood) {
+    return {
+      error: `${missingFood.name || "A food"} is not on the menu anymore. Please remove it from your cart.`,
+    };
+  }
+
   const items = [];
 
   for (const cartItem of cartItems) {
     const food = foods.find((f) => f.id === cartItem.id);
     const quantity = Math.floor(Number(cartItem.quantity));
 
-    if (food && quantity > 0) {
+    if (quantity > 0) {
       items.push({
         id: food.id,
         name: food.name,
@@ -47,7 +55,7 @@ export async function placeOrder(cartItems) {
   }
 
   if (items.length === 0) {
-    return { error: "The foods in your cart are not available anymore." };
+    return { error: "Your cart is empty." };
   }
 
   const { error } = await supabase.from("orders").insert({
