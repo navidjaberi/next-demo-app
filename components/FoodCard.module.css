@@ -53,6 +53,15 @@
   color: var(--primary);
 }
 
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin-bottom: 0.4rem;
+}
+
 .ingredients {
   color: var(--text-muted);
   font-size: 0.9rem;

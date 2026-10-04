@@ -1,0 +1,12 @@
+.stars {
+  display: inline-flex;
+  gap: 2px;
+}
+
+.filled {
+  color: #f59f00;
+}
+
+.empty {
+  color: var(--border);
+}

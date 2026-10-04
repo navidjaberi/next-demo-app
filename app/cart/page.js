@@ -11,7 +11,11 @@ export default async function CartPage() {
   return (
     <>
       <h1 className="page-title">Your cart</h1>
-      <CartView isLoggedIn={!!user} />
+      {user?.isAdmin ? (
+        <p className="empty-state">Admin accounts can not place orders.</p>
+      ) : (
+        <CartView isLoggedIn={!!user} />
+      )}
     </>
   );
 }

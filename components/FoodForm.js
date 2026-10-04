@@ -1,47 +1,70 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useState, useTransition } from "react";
 import Image from "next/image";
 import { ImagePlus } from "lucide-react";
-import { addFood } from "@/app/foods/actions";
 import { categories } from "@/lib/categories";
-import styles from "./addFood.module.css";
+import styles from "./FoodForm.module.css";
 
-export default function AddFoodForm() {
-  const [state, formAction, isPending] = useActionState(addFood, {});
-  const [preview, setPreview] = useState(null);
+const MAX_IMAGE_SIZE = 4 * 1024 * 1024;
+
+export default function FoodForm({ action, food, submitText }) {
+  const [state, formAction, isPending] = useActionState(action, {});
+  const [, startTransition] = useTransition();
+  const [values, setValues] = useState({
+    name: food?.name || "",
+    category: food?.category || "",
+    price: food?.price || "",
+    ingredients: food?.ingredients || "",
+    description: food?.description || "",
+  });
+  const [image, setImage] = useState(null);
+  const [preview, setPreview] = useState(food?.image_url || null);
   const [imageError, setImageError] = useState("");
-  const [lastState, setLastState] = useState(state);
-
-  if (state !== lastState) {
-    setLastState(state);
-    setPreview(null);
-  }
 
   const errors = state.errors || {};
-  const values = state.values || {};
+
+  function handleChange(event) {
+    setValues({ ...values, [event.target.name]: event.target.value });
+  }
 
   function handleImageChange(event) {
     const file = event.target.files[0];
     setImageError("");
 
     if (!file) {
-      setPreview(null);
       return;
     }
 
-    if (file.size > 4 * 1024 * 1024) {
+    if (file.size > MAX_IMAGE_SIZE) {
       setImageError("Image should be smaller than 4MB.");
-      setPreview(null);
       event.target.value = "";
       return;
     }
 
+    setImage(file);
     setPreview(URL.createObjectURL(file));
   }
 
+  function handleSubmit(event) {
+    event.preventDefault();
+
+    if (!image && !food) {
+      setImageError("Please choose an image.");
+      return;
+    }
+
+    const formData = new FormData();
+    Object.entries(values).forEach(([key, value]) => formData.append(key, value));
+    if (image) {
+      formData.append("image", image);
+    }
+
+    startTransition(() => formAction(formData));
+  }
+
   return (
-    <form action={formAction} className={`card form ${styles.form}`}>
+    <form onSubmit={handleSubmit} className={`card form ${styles.form}`}>
       <div className={styles.row}>
         <div className="field">
           <label htmlFor="name">Name</label>
@@ -49,7 +72,9 @@ export default function AddFoodForm() {
             className="input"
             id="name"
             name="name"
-            defaultValue={values.name}
+            value={values.name}
+            onChange={handleChange}
+            minLength={2}
             required
           />
           {errors.name && <p className="field-error">{errors.name}</p>}
@@ -61,7 +86,8 @@ export default function AddFoodForm() {
             className="input"
             id="category"
             name="category"
-            defaultValue={values.category || ""}
+            value={values.category}
+            onChange={handleChange}
             required
           >
             <option value="" disabled>
@@ -85,7 +111,8 @@ export default function AddFoodForm() {
             name="price"
             min="0.5"
             step="0.01"
-            defaultValue={values.price}
+            value={values.price}
+            onChange={handleChange}
             required
           />
           {errors.price && <p className="field-error">{errors.price}</p>}
@@ -99,7 +126,9 @@ export default function AddFoodForm() {
           id="ingredients"
           name="ingredients"
           placeholder="Tomato, cheese, basil..."
-          defaultValue={values.ingredients}
+          value={values.ingredients}
+          onChange={handleChange}
+          minLength={5}
           required
         />
         {errors.ingredients && <p className="field-error">{errors.ingredients}</p>}
@@ -112,7 +141,9 @@ export default function AddFoodForm() {
           id="description"
           name="description"
           rows={4}
-          defaultValue={values.description}
+          value={values.description}
+          onChange={handleChange}
+          minLength={15}
           required
         />
         {errors.description && <p className="field-error">{errors.description}</p>}
@@ -133,10 +164,8 @@ export default function AddFoodForm() {
             className={styles.fileInput}
             type="file"
             id="image"
-            name="image"
             accept="image/*"
             onChange={handleImageChange}
-            required
           />
         </div>
         {(imageError || errors.image) && (
@@ -147,7 +176,7 @@ export default function AddFoodForm() {
       {state.error && <p className="alert alert-error">{state.error}</p>}
 
       <button className="btn btn-primary btn-lg" type="submit" disabled={isPending}>
-        {isPending ? "Saving..." : "Add food"}
+        {isPending ? "Saving..." : submitText}
       </button>
     </form>
   );

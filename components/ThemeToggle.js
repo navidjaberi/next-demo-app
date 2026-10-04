@@ -1,14 +1,15 @@
 "use client";
 
-import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
 import styles from "./ThemeToggle.module.css";
 
 export default function ThemeToggle() {
-  const { resolvedTheme, setTheme } = useTheme();
-
   function toggleTheme() {
-    setTheme(resolvedTheme === "dark" ? "light" : "dark");
+    const currentTheme = document.documentElement.dataset.theme;
+    const newTheme = currentTheme === "dark" ? "light" : "dark";
+
+    document.documentElement.dataset.theme = newTheme;
+    localStorage.setItem("theme", newTheme);
   }
 
   return (

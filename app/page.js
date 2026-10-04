@@ -58,7 +58,7 @@ export default async function HomePage() {
             src="/foods/pizza.jpg"
             alt="Italian pizza"
             fill
-            priority
+            loading="eager"
             sizes="(max-width: 800px) 100vw, 50vw"
           />
         </div>
@@ -83,15 +83,16 @@ export default async function HomePage() {
         </div>
 
         {foods.length === 0 ? (
-          <p className="empty-state">No foods yet. Be the first to add one!</p>
+          <p className="empty-state">No foods yet. Please check back soon.</p>
         ) : (
           <div className="food-grid">
             {foods.map((food) => (
               <FoodCard
                 key={food.id}
                 food={food}
-                isLoggedIn={!!user}
+                user={user}
                 isFavorite={favoriteIds.includes(food.id)}
+                eager
               />
             ))}
           </div>

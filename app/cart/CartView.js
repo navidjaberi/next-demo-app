@@ -62,7 +62,7 @@ export default function CartView({ isLoggedIn }) {
         {items.map((item) => (
           <li key={item.id} className={styles.item}>
             <div className={styles.image}>
-              <FoodImage src={item.image_url} alt={item.name} sizes="80px" />
+              <FoodImage src={item.image_url} alt={item.name} sizes="80px" eager />
             </div>
 
             <div className={styles.info}>
