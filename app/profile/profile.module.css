@@ -1,0 +1,77 @@
+.section {
+  margin-bottom: 3rem;
+}
+
+.section h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.section h2 svg {
+  color: var(--primary);
+}
+
+.empty {
+  color: var(--text-muted);
+}
+
+.orders {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.order {
+  padding: 1.25rem;
+}
+
+.orderHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status {
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  background-color: var(--primary-soft);
+  color: var(--primary);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.date {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  margin: 0.25rem 0 0.75rem;
+}
+
+.orderItems {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.95rem;
+}
+
+.orderItems li,
+.orderTotal {
+  display: flex;
+  justify-content: space-between;
+}
+
+.orderTotal {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border);
+  font-weight: 700;
+}
+
+.passwordForm {
+  max-width: 420px;
+}
