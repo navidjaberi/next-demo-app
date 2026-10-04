@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { demoOwner } from "@/lib/demo";
 import { createClient } from "@/lib/supabase/server";
 
 function getSafeRedirect(next) {
@@ -63,15 +64,8 @@ export async function signup(prevState, formData) {
 }
 
 export async function loginAsOwner() {
-  const email = process.env.DEMO_ADMIN_EMAIL;
-  const password = process.env.DEMO_ADMIN_PASSWORD;
-
-  if (!email || !password) {
-    return { error: "Owner login is not set up yet." };
-  }
-
   const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  const { error } = await supabase.auth.signInWithPassword(demoOwner);
 
   if (error) {
     return { error: "Owner login failed. Please try again later." };
