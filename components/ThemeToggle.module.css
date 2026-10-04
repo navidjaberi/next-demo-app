@@ -1,0 +1,11 @@
+.sun {
+  display: none;
+}
+
+:global([data-theme="dark"]) .sun {
+  display: block;
+}
+
+:global([data-theme="dark"]) .moon {
+  display: none;
+}
