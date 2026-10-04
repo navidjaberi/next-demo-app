@@ -76,7 +76,7 @@ export default async function FoodsPage({ searchParams }) {
               key={food.id}
               food={food}
               eager={index < 4}
-              isLoggedIn={!!user}
+              user={user}
               isFavorite={favoriteIds.includes(food.id)}
             />
           ))}

@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Pencil } from "lucide-react";
 import AddToCartButton from "@/components/AddToCartButton";
-import DeleteFoodButton from "@/components/DeleteFoodButton";
 import FavoriteButton from "@/components/FavoriteButton";
 import FoodImage from "@/components/FoodImage";
-import { getFavoriteIds, getFood } from "@/lib/foods";
+import Stars from "@/components/Stars";
+import { getFavoriteIds, getFood, getReviews } from "@/lib/foods";
 import { formatPrice } from "@/lib/format";
 import { getUser } from "@/lib/supabase/server";
+import Reviews from "./Reviews";
 import styles from "./detail.module.css";
 
 export async function generateMetadata({ params }) {
@@ -28,8 +29,10 @@ export default async function FoodDetailPage({ params }) {
     notFound();
   }
 
-  const favoriteIds = await getFavoriteIds(user?.id);
-  const isOwner = user && user.id === food.created_by;
+  const [favoriteIds, reviews] = await Promise.all([
+    getFavoriteIds(user?.id),
+    getReviews(food.id),
+  ]);
 
   return (
     <>
@@ -51,6 +54,14 @@ export default async function FoodDetailPage({ params }) {
         <div className={styles.info}>
           <span className={styles.category}>{food.category}</span>
           <h1>{food.name}</h1>
+          <div className={styles.rating}>
+            <Stars rating={food.rating} />
+            <span>
+              {food.reviewCount > 0
+                ? `${food.rating} from ${food.reviewCount} ${food.reviewCount === 1 ? "review" : "reviews"}`
+                : "No reviews yet"}
+            </span>
+          </div>
           <p className={styles.price}>{formatPrice(food.price)}</p>
           <p className={styles.description}>{food.description}</p>
 
@@ -58,17 +69,25 @@ export default async function FoodDetailPage({ params }) {
           <p className={styles.ingredients}>{food.ingredients}</p>
 
           <div className={styles.actions}>
-            <AddToCartButton food={food} large />
-            {user && (
+            {user?.isAdmin ? (
+              <Link href={`/admin/foods/${food.id}/edit`} className="btn btn-outline btn-lg">
+                <Pencil size={16} />
+                Edit food
+              </Link>
+            ) : (
+              <AddToCartButton food={food} large />
+            )}
+            {user && !user.isAdmin && (
               <FavoriteButton
                 foodId={food.id}
                 initialFavorite={favoriteIds.includes(food.id)}
               />
             )}
-            {isOwner && <DeleteFoodButton foodId={food.id} foodName={food.name} />}
           </div>
         </div>
       </div>
+
+      <Reviews foodId={food.id} reviews={reviews} user={user} />
     </>
   );
 }
