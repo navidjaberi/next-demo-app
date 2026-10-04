@@ -6,11 +6,12 @@ import { usePathname, useRouter } from "next/navigation";
 import { LogOut, Menu, ShoppingBag, UtensilsCrossed, X } from "lucide-react";
 import { logout } from "@/app/login/actions";
 import { useCart } from "@/context/CartContext";
+import Avatar from "./Avatar";
 import ConfirmModal from "./ConfirmModal";
 import ThemeToggle from "./ThemeToggle";
 import styles from "./Navbar.module.css";
 
-export default function Navbar({ userEmail }) {
+export default function Navbar({ user }) {
   const pathname = usePathname();
   const router = useRouter();
   const { totalCount } = useCart();
@@ -23,9 +24,8 @@ export default function Navbar({ userEmail }) {
     { href: "/foods", label: "Menu" },
   ];
 
-  if (userEmail) {
-    links.push({ href: "/add-food", label: "Add food" });
-    links.push({ href: "/profile", label: "Profile" });
+  if (user?.isAdmin) {
+    links.push({ href: "/admin", label: "Dashboard" });
   }
 
   function handleLogout() {
@@ -63,9 +63,12 @@ export default function Navbar({ userEmail }) {
             </Link>
           ))}
 
-          {userEmail ? (
+          {user ? (
             <div className={styles.logout}>
-              <span className={styles.email}>{userEmail}</span>
+              <Link href="/profile" className={styles.user} onClick={() => setMenuOpen(false)}>
+                <Avatar src={user.avatarUrl} name={user.name} size={32} />
+                <span className={styles.name}>{user.name}</span>
+              </Link>
               <button
                 className="btn btn-outline"
                 onClick={() => {
@@ -90,10 +93,12 @@ export default function Navbar({ userEmail }) {
 
         <div className={styles.actions}>
           <ThemeToggle />
-          <Link href="/cart" className={`icon-btn ${styles.cart}`} aria-label="Cart">
-            <ShoppingBag size={20} />
-            {totalCount > 0 && <span className={styles.badge}>{totalCount}</span>}
-          </Link>
+          {!user?.isAdmin && (
+            <Link href="/cart" className={`icon-btn ${styles.cart}`} aria-label="Cart">
+              <ShoppingBag size={20} />
+              {totalCount > 0 && <span className={styles.badge}>{totalCount}</span>}
+            </Link>
+          )}
           <button
             className={`icon-btn ${styles.menuButton}`}
             onClick={() => setMenuOpen(!menuOpen)}
