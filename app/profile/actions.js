@@ -4,8 +4,13 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 
 export async function changePassword(prevState, formData) {
+  const currentPassword = formData.get("currentPassword");
   const password = formData.get("password");
   const confirmPassword = formData.get("confirmPassword");
+
+  if (!currentPassword) {
+    return { error: "Please enter your current password." };
+  }
 
   if (!password || password.length < 6) {
     return { error: "Password must be at least 6 characters." };
@@ -15,7 +20,30 @@ export async function changePassword(prevState, formData) {
     return { error: "Passwords do not match." };
   }
 
+  if (password === currentPassword) {
+    return { error: "New password must be different from the current one." };
+  }
+
   const supabase = await createClient();
+  const { data } = await supabase.auth.getUser();
+
+  if (!data.user) {
+    return { error: "Please sign in again." };
+  }
+
+  if (data.user.email === process.env.DEMO_ADMIN_EMAIL) {
+    return { error: "The demo owner password can't be changed." };
+  }
+
+  const { error: signInError } = await supabase.auth.signInWithPassword({
+    email: data.user.email,
+    password: currentPassword,
+  });
+
+  if (signInError) {
+    return { error: "Your current password is not correct." };
+  }
+
   const { error } = await supabase.auth.updateUser({ password });
 
   if (error) {
