@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { LogOut, Menu, ShoppingBag, Store, UtensilsCrossed, X } from "lucide-react";
-import { loginAsOwner, logout } from "@/app/login/actions";
+import { logout } from "@/app/login/actions";
 import { useCart } from "@/context/CartContext";
 import Avatar from "./Avatar";
 import ConfirmModal from "./ConfirmModal";
@@ -18,7 +18,6 @@ export default function Navbar({ user }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [isPending, startTransition] = useTransition();
-  const [isOwnerPending, startOwnerTransition] = useTransition();
 
   const links = [
     { href: "/", label: "Home" },
@@ -34,16 +33,6 @@ export default function Navbar({ user }) {
       await logout();
       setShowLogoutModal(false);
       router.push("/");
-    });
-  }
-
-  function handleOwnerLogin() {
-    setMenuOpen(false);
-    startOwnerTransition(async () => {
-      const result = await loginAsOwner();
-      if (result?.error) {
-        alert(result.error);
-      }
     });
   }
 
@@ -93,14 +82,14 @@ export default function Navbar({ user }) {
             </div>
           ) : (
             <div className={styles.account}>
-              <button
+              <Link
+                href="/login?mode=owner"
                 className="btn btn-outline"
-                onClick={handleOwnerLogin}
-                disabled={isOwnerPending}
+                onClick={() => setMenuOpen(false)}
               >
                 <Store size={16} />
-                {isOwnerPending ? "Signing in..." : "Owner login"}
-              </button>
+                Owner login
+              </Link>
               <Link
                 href="/login"
                 className="btn btn-primary"

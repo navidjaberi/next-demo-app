@@ -25,3 +25,8 @@
   cursor: pointer;
   padding: 0;
 }
+
+.switch a {
+  color: var(--primary);
+  font-weight: 600;
+}

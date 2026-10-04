@@ -95,14 +95,12 @@ export default async function ProfilePage() {
         </>
       )}
 
-      <section className={styles.section}>
-        <h2>Change password</h2>
-        {user.isDemoOwner ? (
-          <p className="empty-state">This is a demo account, so its password cannot be changed.</p>
-        ) : (
+      {!user.isAdmin && (
+        <section className={styles.section}>
+          <h2>Change password</h2>
           <ChangePasswordForm />
-        )}
-      </section>
+        </section>
+      )}
     </>
   );
 }

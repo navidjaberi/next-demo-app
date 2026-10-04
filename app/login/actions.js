@@ -2,7 +2,6 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
-import { demoOwner } from "@/lib/demo";
 import { createClient } from "@/lib/supabase/server";
 
 function getSafeRedirect(next) {
@@ -63,12 +62,30 @@ export async function signup(prevState, formData) {
   redirect(getSafeRedirect(formData.get("next")));
 }
 
-export async function loginAsOwner() {
+export async function ownerLogin(prevState, formData) {
+  const email = formData.get("email");
+  const password = formData.get("password");
+
+  if (!email || !password) {
+    return { error: "Please enter your email and password.", email };
+  }
+
   const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithPassword(demoOwner);
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
   if (error) {
-    return { error: "Owner login failed. Please try again later." };
+    return { error: error.message, email };
+  }
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", data.user.id)
+    .maybeSingle();
+
+  if (profile?.role !== "admin") {
+    await supabase.auth.signOut();
+    return { error: "This is not an owner account.", email };
   }
 
   revalidatePath("/", "layout");
