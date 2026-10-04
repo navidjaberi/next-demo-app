@@ -48,7 +48,7 @@
   border-bottom-color: var(--primary);
 }
 
-.logout {
+.account {
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -132,7 +132,7 @@
     align-self: flex-start;
   }
 
-  .logout {
+  .account {
     justify-content: space-between;
   }
 }

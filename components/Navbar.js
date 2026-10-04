@@ -3,21 +3,22 @@
 import { useState, useTransition } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LogOut, Menu, ShoppingBag, UtensilsCrossed, X } from "lucide-react";
-import { logout } from "@/app/login/actions";
+import { LogOut, Menu, ShoppingBag, Store, UtensilsCrossed, X } from "lucide-react";
+import { loginAsOwner, logout } from "@/app/login/actions";
 import { useCart } from "@/context/CartContext";
 import Avatar from "./Avatar";
 import ConfirmModal from "./ConfirmModal";
 import ThemeToggle from "./ThemeToggle";
 import styles from "./Navbar.module.css";
 
-export default function Navbar({ user }) {
+export default function Navbar({ user, showOwnerLogin }) {
   const pathname = usePathname();
   const router = useRouter();
   const { totalCount } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const [isOwnerPending, startOwnerTransition] = useTransition();
 
   const links = [
     { href: "/", label: "Home" },
@@ -33,6 +34,16 @@ export default function Navbar({ user }) {
       await logout();
       setShowLogoutModal(false);
       router.push("/");
+    });
+  }
+
+  function handleOwnerLogin() {
+    setMenuOpen(false);
+    startOwnerTransition(async () => {
+      const result = await loginAsOwner();
+      if (result?.error) {
+        alert(result.error);
+      }
     });
   }
 
@@ -64,7 +75,7 @@ export default function Navbar({ user }) {
           ))}
 
           {user ? (
-            <div className={styles.logout}>
+            <div className={styles.account}>
               <Link href="/profile" className={styles.user} onClick={() => setMenuOpen(false)}>
                 <Avatar src={user.avatarUrl} name={user.name} size={32} />
                 <span className={styles.name}>{user.name}</span>
@@ -81,13 +92,25 @@ export default function Navbar({ user }) {
               </button>
             </div>
           ) : (
-            <Link
-              href="/login"
-              className="btn btn-primary"
-              onClick={() => setMenuOpen(false)}
-            >
-              Sign in
-            </Link>
+            <div className={styles.account}>
+              {showOwnerLogin && (
+                <button
+                  className="btn btn-outline"
+                  onClick={handleOwnerLogin}
+                  disabled={isOwnerPending}
+                >
+                  <Store size={16} />
+                  {isOwnerPending ? "Signing in..." : "Owner login"}
+                </button>
+              )}
+              <Link
+                href="/login"
+                className="btn btn-primary"
+                onClick={() => setMenuOpen(false)}
+              >
+                Sign in
+              </Link>
+            </div>
           )}
         </nav>
 
