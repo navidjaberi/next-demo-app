@@ -11,7 +11,7 @@ The app has two roles:
 
 ## Try it
 
-This is a demo app, so you can test the admin side with the demo owner account. Click **Owner login** in the header, or sign in with:
+This is a demo app, so you can test the admin side with the demo owner account. Click **Owner login** in the header and sign in with:
 
 | Role | Email | Password |
 | --- | --- | --- |
@@ -33,8 +33,8 @@ To try the customer side, sign up with any email.
 - Favorites saved per user
 - Profile page with avatar upload, display name, order status, favorites and password change
 - Confirm modals for signing out and deleting
-- One click "Owner login" button so visitors can try the admin dashboard
-- Changing the password needs the current password
+- Separate "Owner login" page for the admin account
+- Customers need their current password to change it
 - Protected pages (`/admin`, `/profile`) using Next.js proxy
 - Dark mode (follows the system setting, can be toggled and is saved in a cookie)
 - Responsive layout with a mobile menu
@@ -91,7 +91,7 @@ set role = 'admin'
 where id = (select id from auth.users where email = 'owner@foodcorner.dev');
 ```
 
-Every new account is a customer by default. You can use the same query with another email to make more admins. The demo owner can't change its password from the app, but visitors can edit the menu and order statuses, so check them now and then.
+Every new account is a customer by default. You can use the same query with another email to make more admins. Admin accounts can't change their password from the app, but visitors can edit the menu and order statuses, so check them now and then.
 
 ### 2. Set up the project
 
