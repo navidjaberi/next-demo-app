@@ -1,18 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { LogOut, Menu, ShoppingBag, UtensilsCrossed, X } from "lucide-react";
 import { logout } from "@/app/login/actions";
 import { useCart } from "@/context/CartContext";
+import ConfirmModal from "./ConfirmModal";
 import ThemeToggle from "./ThemeToggle";
 import styles from "./Navbar.module.css";
 
 export default function Navbar({ userEmail }) {
   const pathname = usePathname();
+  const router = useRouter();
   const { totalCount } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const links = [
     { href: "/", label: "Home" },
@@ -22,6 +26,14 @@ export default function Navbar({ userEmail }) {
   if (userEmail) {
     links.push({ href: "/add-food", label: "Add food" });
     links.push({ href: "/profile", label: "Profile" });
+  }
+
+  function handleLogout() {
+    startTransition(async () => {
+      await logout();
+      setShowLogoutModal(false);
+      router.push("/");
+    });
   }
 
   function isActive(href) {
@@ -52,13 +64,19 @@ export default function Navbar({ userEmail }) {
           ))}
 
           {userEmail ? (
-            <form action={logout} className={styles.logoutForm}>
+            <div className={styles.logout}>
               <span className={styles.email}>{userEmail}</span>
-              <button className="btn btn-outline" type="submit">
+              <button
+                className="btn btn-outline"
+                onClick={() => {
+                  setMenuOpen(false);
+                  setShowLogoutModal(true);
+                }}
+              >
                 <LogOut size={16} />
                 Sign out
               </button>
-            </form>
+            </div>
           ) : (
             <Link
               href="/login"
@@ -85,6 +103,16 @@ export default function Navbar({ userEmail }) {
           </button>
         </div>
       </div>
+
+      <ConfirmModal
+        open={showLogoutModal}
+        title="Sign out"
+        message="Are you sure you want to sign out?"
+        confirmText="Sign out"
+        isPending={isPending}
+        onConfirm={handleLogout}
+        onClose={() => setShowLogoutModal(false)}
+      />
     </header>
   );
 }

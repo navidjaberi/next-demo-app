@@ -139,6 +139,15 @@ img {
   color: var(--danger);
 }
 
+.btn-danger-solid {
+  background-color: var(--danger);
+  color: #fff;
+}
+
+.btn-danger-solid:hover:not(:disabled) {
+  filter: brightness(0.9);
+}
+
 .btn-danger:hover:not(:disabled) {
   background-color: var(--danger);
   color: #fff;
