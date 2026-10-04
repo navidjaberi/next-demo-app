@@ -31,6 +31,24 @@
   --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --background: #16130f;
+    --surface: #211c17;
+    --surface-muted: #2b251f;
+    --text: #f3ece4;
+    --text-muted: #a89c90;
+    --border: #3a322a;
+    --primary: #ff7a2f;
+    --primary-hover: #ff9152;
+    --primary-soft: #3a2518;
+    --danger: #f06595;
+    --success: #51cf66;
+    --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    color-scheme: dark;
+  }
+}
+
 * {
   box-sizing: border-box;
 }
