@@ -71,10 +71,11 @@ export default async function FoodsPage({ searchParams }) {
         </div>
       ) : (
         <div className="food-grid">
-          {foods.map((food) => (
+          {foods.map((food, index) => (
             <FoodCard
               key={food.id}
               food={food}
+              eager={index < 4}
               isLoggedIn={!!user}
               isFavorite={favoriteIds.includes(food.id)}
             />

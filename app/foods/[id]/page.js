@@ -44,7 +44,7 @@ export default async function FoodDetailPage({ params }) {
             src={food.image_url}
             alt={food.name}
             sizes="(max-width: 800px) 100vw, 550px"
-            priority
+            eager
           />
         </div>
 
@@ -65,7 +65,7 @@ export default async function FoodDetailPage({ params }) {
                 initialFavorite={favoriteIds.includes(food.id)}
               />
             )}
-            {isOwner && <DeleteFoodButton foodId={food.id} />}
+            {isOwner && <DeleteFoodButton foodId={food.id} foodName={food.name} />}
           </div>
         </div>
       </div>

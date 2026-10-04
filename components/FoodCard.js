@@ -5,7 +5,7 @@ import AddToCartButton from "./AddToCartButton";
 import FavoriteButton from "./FavoriteButton";
 import styles from "./FoodCard.module.css";
 
-export default function FoodCard({ food, isLoggedIn, isFavorite }) {
+export default function FoodCard({ food, isLoggedIn, isFavorite, eager = false }) {
   return (
     <article className={styles.card}>
       <Link href={`/foods/${food.id}`} className={styles.imageWrapper}>
@@ -13,6 +13,7 @@ export default function FoodCard({ food, isLoggedIn, isFavorite }) {
           src={food.image_url}
           alt={food.name}
           sizes="(max-width: 600px) 100vw, 300px"
+          eager={eager}
         />
       </Link>
 
