@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { demoOwner } from "@/lib/demo";
 import { createClient } from "@/lib/supabase/server";
 
 export async function changePassword(prevState, formData) {
@@ -31,7 +32,7 @@ export async function changePassword(prevState, formData) {
     return { error: "Please sign in again." };
   }
 
-  if (data.user.email === process.env.DEMO_ADMIN_EMAIL) {
+  if (data.user.email === demoOwner.email) {
     return { error: "The demo owner password can't be changed." };
   }
 

@@ -11,7 +11,7 @@ import ConfirmModal from "./ConfirmModal";
 import ThemeToggle from "./ThemeToggle";
 import styles from "./Navbar.module.css";
 
-export default function Navbar({ user, showOwnerLogin }) {
+export default function Navbar({ user }) {
   const pathname = usePathname();
   const router = useRouter();
   const { totalCount } = useCart();
@@ -93,16 +93,14 @@ export default function Navbar({ user, showOwnerLogin }) {
             </div>
           ) : (
             <div className={styles.account}>
-              {showOwnerLogin && (
-                <button
-                  className="btn btn-outline"
-                  onClick={handleOwnerLogin}
-                  disabled={isOwnerPending}
-                >
-                  <Store size={16} />
-                  {isOwnerPending ? "Signing in..." : "Owner login"}
-                </button>
-              )}
+              <button
+                className="btn btn-outline"
+                onClick={handleOwnerLogin}
+                disabled={isOwnerPending}
+              >
+                <Store size={16} />
+                {isOwnerPending ? "Signing in..." : "Owner login"}
+              </button>
               <Link
                 href="/login"
                 className="btn btn-primary"

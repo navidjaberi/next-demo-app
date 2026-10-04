@@ -9,6 +9,16 @@ The app has two roles:
 
 ![Home page](docs/screenshots/home.png)
 
+## Try it
+
+This is a demo app, so you can test the admin side with the demo owner account. Click **Owner login** in the header, or sign in with:
+
+| Role | Email | Password |
+| --- | --- | --- |
+| Owner (admin) | `owner@foodcorner.dev` | `foodcorner123` |
+
+To try the customer side, sign up with any email.
+
 ## Features
 
 - Menu with search and category filters (data is loaded on the server)
@@ -72,24 +82,16 @@ proxy.js               refreshes the session and protects pages
    - `supabase/seed.sql`
    - `supabase/roles-and-reviews.sql`
 3. In **Authentication > Providers > Email** you can turn off "Confirm email" if you want to sign in right after sign up.
-4. Sign up in the app, then make your account an admin in the SQL Editor:
+4. Create the demo owner account: open **Authentication > Users > Add user > Create new user**, enter `owner@foodcorner.dev` and `foodcorner123`, and check **Auto Confirm User**.
+5. Make it an admin in the SQL Editor:
 
 ```sql
 update public.profiles
 set role = 'admin'
-where id = (select id from auth.users where email = 'you@example.com');
+where id = (select id from auth.users where email = 'owner@foodcorner.dev');
 ```
 
-Every new account is a customer by default.
-
-5. (Optional) For the **Owner login** button, create one more account to use as the demo owner, make it an admin with the query above, and add its email and password to `.env.local`:
-
-```
-DEMO_ADMIN_EMAIL=owner@example.com
-DEMO_ADMIN_PASSWORD=owner-password
-```
-
-The button only shows when `DEMO_ADMIN_EMAIL` is set. The demo owner can't change its password, but visitors can still edit the menu and order statuses, so check them now and then.
+Every new account is a customer by default. You can use the same query with another email to make more admins. The demo owner can't change its password from the app, but visitors can edit the menu and order statuses, so check them now and then.
 
 ### 2. Set up the project
 
