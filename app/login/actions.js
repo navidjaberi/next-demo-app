@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
 function getSafeRedirect(next) {
-  if (next && next.startsWith("/") && !next.startsWith("//")) {
+  if (next && next.startsWith("/") && !next.startsWith("//") && !next.includes("\\")) {
     return next;
   }
   return "/foods";
