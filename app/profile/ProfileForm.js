@@ -14,6 +14,7 @@ export default function ProfileForm({ user }) {
 
   function handleAvatarChange(event) {
     const file = event.target.files[0];
+    event.target.value = "";
     setAvatarError("");
 
     if (!file) {
