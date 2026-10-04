@@ -47,7 +47,7 @@ export default async function HomePage() {
               <ArrowRight size={18} />
             </Link>
             {!user && (
-              <Link href="/login" className="btn btn-outline btn-lg">
+              <Link href="/login?mode=signup" className="btn btn-outline btn-lg">
                 Create an account
               </Link>
             )}
