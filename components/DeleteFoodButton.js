@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { Trash2 } from "lucide-react";
-import { deleteFood } from "@/app/foods/actions";
+import { deleteFood } from "@/app/admin/actions";
 import ConfirmModal from "./ConfirmModal";
 
 export default function DeleteFoodButton({ foodId, foodName }) {
@@ -15,18 +15,21 @@ export default function DeleteFoodButton({ foodId, foodName }) {
 
     startTransition(async () => {
       const result = await deleteFood(foodId);
-      if (result?.error) {
+      if (result.error) {
         setError(result.error);
-        setShowModal(false);
       }
+      setShowModal(false);
     });
   }
 
   return (
     <div>
-      <button className="btn btn-danger" onClick={() => setShowModal(true)}>
+      <button
+        className="icon-btn"
+        onClick={() => setShowModal(true)}
+        aria-label={`Delete ${foodName}`}
+      >
         <Trash2 size={16} />
-        Delete
       </button>
       {error && <p className="field-error">{error}</p>}
 
