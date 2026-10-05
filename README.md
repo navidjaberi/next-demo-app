@@ -2,6 +2,8 @@
 
 A small food ordering app built with **Next.js (App Router)** and **Supabase**.
 
+**Live demo:** https://food-corner-beta-gray.vercel.app
+
 The app has two roles:
 
 - **Customers** browse the menu, order food, save favorites, write reviews and change their avatar.
