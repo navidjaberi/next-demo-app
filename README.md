@@ -72,49 +72,6 @@ supabase/              database schema and seed data
 proxy.js               refreshes the session and protects pages
 ```
 
-## Getting started
-
-### 1. Create a Supabase project
-
-1. Create a free project on [supabase.com](https://supabase.com/).
-2. Open the **SQL Editor** and run these files in order:
-   - `supabase/schema.sql`
-   - `supabase/seed.sql`
-   - `supabase/roles-and-reviews.sql`
-3. In **Authentication > Providers > Email** you can turn off "Confirm email" if you want to sign in right after sign up.
-4. Create the demo owner account: open **Authentication > Users > Add user > Create new user**, enter `owner@foodcorner.dev` and `foodcorner123`, and check **Auto Confirm User**.
-5. Make it an admin in the SQL Editor:
-
-```sql
-update public.profiles
-set role = 'admin'
-where id = (select id from auth.users where email = 'owner@foodcorner.dev');
-```
-
-Every new account is a customer by default. You can use the same query with another email to make more admins. Admin accounts can't change their password from the app, but visitors can edit the menu and order statuses, so check them now and then.
-
-### 2. Set up the project
-
-```bash
-npm install
-cp .env.example .env.local
-```
-
-Put your project URL and anon key (from **Project Settings > API**) in `.env.local`:
-
-```
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
-```
-
-### 3. Run it
-
-```bash
-npm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000).
-
 ## Scripts
 
 | Command | Description |
@@ -125,9 +82,27 @@ Open [http://localhost:3000](http://localhost:3000).
 | `npm run lint` | Run ESLint |
 | `npm test` | Run unit tests |
 
-## Deploy
+## Run it locally
 
-The easiest way is [Vercel](https://vercel.com/new). Import the repository and add the environment variables from `.env.local`.
+You need a free [Supabase](https://supabase.com/) project.
+
+1. In the Supabase **SQL Editor**, run `supabase/schema.sql`, `supabase/seed.sql` and `supabase/roles-and-reviews.sql` in this order.
+2. Create the owner account in **Authentication > Users > Add user** (`owner@foodcorner.dev` / `foodcorner123`, with **Auto Confirm User**) and make it an admin:
+
+```sql
+update public.profiles set role = 'admin'
+where id = (select id from auth.users where email = 'owner@foodcorner.dev');
+```
+
+3. Copy `.env.example` to `.env.local` and add your project URL and anon key from **Project Settings > API**.
+4. Install and start:
+
+```bash
+npm install
+npm run dev
+```
+
+New accounts are customers by default.
 
 ## Notes
 
